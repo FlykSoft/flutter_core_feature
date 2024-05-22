@@ -5,6 +5,9 @@ sealed class BaseFailure {
   const BaseFailure({
     required this.message,
   });
+
+  @override
+  String toString() => message;
 }
 
 // Database error type
@@ -12,6 +15,9 @@ sealed class DatabaseFailure extends BaseFailure {
   const DatabaseFailure({
     required super.message,
   });
+
+  @override
+  String toString() => message;
 }
 
 // REST API error type
@@ -51,6 +57,9 @@ sealed class ApiFailure extends BaseFailure {
         return UnknownApiFailure(message: message);
     }
   }
+
+  @override
+  String toString() => message;
 }
 
 // Specific API error subtypes with additional properties (optional)
