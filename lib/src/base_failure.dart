@@ -1,23 +1,29 @@
-// This marker class ensures only defined subclasses can extend Failure.
+import 'package:core_feature/src/localization/core_localization.dart';
+
 sealed class BaseFailure {
-  final String message;
+  final String? message;
 
   const BaseFailure({
     required this.message,
   });
 
   @override
-  String toString() => message;
+  String toString() => message ?? localizedMessage;
+
+  String get localizedMessage;
 }
 
 // Database error type
 sealed class DatabaseFailure extends BaseFailure {
   const DatabaseFailure({
-    required super.message,
+    super.message,
   });
 
   @override
-  String toString() => message;
+  String toString() => message ?? localizedMessage;
+
+  @override
+  String get localizedMessage;
 }
 
 // REST API error type
@@ -26,13 +32,13 @@ sealed class ApiFailure extends BaseFailure {
 
   const ApiFailure({
     required this.statusCode,
-    required super.message,
+    super.message,
   });
 
   // Specific API error subtypes
   factory ApiFailure.fromStatusCode({
     required int statusCode,
-    required String message,
+    String? message,
   }) {
     switch (statusCode) {
       case 400:
@@ -59,7 +65,10 @@ sealed class ApiFailure extends BaseFailure {
   }
 
   @override
-  String toString() => message;
+  String toString() => message ?? localizedMessage;
+
+  @override
+  String get localizedMessage;
 }
 
 // Specific API error subtypes with additional properties (optional)
@@ -67,84 +76,115 @@ class BadRequestError extends ApiFailure {
   final String? validationErrors; // Example: List of validation errors
 
   const BadRequestError({
-    required super.message,
+    super.message,
     this.validationErrors,
   }) : super(
           statusCode: 400,
         );
+
+  @override
+  String get localizedMessage => CoreLocalization.instance.badRequestError;
 }
 
 class UnauthorizedError extends ApiFailure {
   const UnauthorizedError({
-    required super.message,
+    super.message,
   }) : super(
           statusCode: 401,
         );
+
+  @override
+  String get localizedMessage => CoreLocalization.instance.unauthorizedError;
 }
 
 class ForbiddenError extends ApiFailure {
   const ForbiddenError({
-    required super.message,
+    super.message,
   }) : super(
           statusCode: 403,
         );
+
+  @override
+  String get localizedMessage => CoreLocalization.instance.forbiddenError;
 }
 
 class NotFoundError extends ApiFailure {
   const NotFoundError({
-    required super.message,
+    super.message,
   }) : super(
           statusCode: 404,
         );
+
+  @override
+  String get localizedMessage => CoreLocalization.instance.notFoundError;
 }
 
 class RequestTimeoutError extends ApiFailure {
   const RequestTimeoutError({
-    required super.message,
+    super.message,
   }) : super(
           statusCode: 408,
         );
+
+  @override
+  String get localizedMessage => CoreLocalization.instance.requestTimeoutError;
 }
 
 class TooManyRequestsError extends ApiFailure {
   final int? retryAfter;
 
   const TooManyRequestsError({
-    required super.message,
+    super.message,
     this.retryAfter,
   }) : super(
           statusCode: 429,
         );
+
+  @override
+  String get localizedMessage => CoreLocalization.instance.tooManyRequestsError;
 }
 
 class InternalServerError extends ApiFailure {
   const InternalServerError({
-    required super.message,
+    super.message,
   }) : super(
           statusCode: 500,
         );
+
+  @override
+  String get localizedMessage => CoreLocalization.instance.internalServerError;
 }
 
 class BadGatewayError extends ApiFailure {
   const BadGatewayError({
-    required super.message,
+    super.message,
   }) : super(
           statusCode: 502,
         );
+
+  @override
+  String get localizedMessage => CoreLocalization.instance.badRequestError;
 }
 
 class ServiceUnavailableError extends ApiFailure {
   const ServiceUnavailableError({
-    required super.message,
+    super.message,
   }) : super(
           statusCode: 503,
         );
+
+  @override
+  String get localizedMessage =>
+      CoreLocalization.instance.serviceUnavailableError;
 }
 
 class UnknownApiFailure extends ApiFailure {
   const UnknownApiFailure({
-    required super.message,
+    super.message,
   }) : super(
           statusCode: 0,
         );
+
+  @override
+  String get localizedMessage => CoreLocalization.instance.unknownApiFailure;
 }
